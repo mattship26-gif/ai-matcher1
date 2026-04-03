@@ -45,4 +45,4 @@ export default function QuizPage() {
     },
     {
       id: 4,
-      question: "What's your
+      question: "What's your experience level with AI?",

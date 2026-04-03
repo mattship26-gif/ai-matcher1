@@ -221,7 +221,7 @@ export default function Quiz() {
       Object.entries(newAnswers).forEach(([key, val]) => {
         params.append(key, val)
       })
-      router.push(`/results?${params.toString()}`)
+      router.push(`/quiz/results')
     }
   }
 

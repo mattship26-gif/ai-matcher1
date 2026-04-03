@@ -286,5 +286,3 @@ export const AI_TOOLS: AITool[] = [
 
   // ... Include rest of tools with proper metadata
 ]
-
-export type AITool = typeof AI_TOOLS[number]

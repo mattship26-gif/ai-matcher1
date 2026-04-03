@@ -343,9 +343,7 @@ export default function Quiz() {
 
         {/* Question card with animation */}
         <div 
-          className={`relative group/card mb-8 transition-all duration-300 ${
-            direction === 'forward' ? 'animate-slide-in-right' : 'animate-slide-in-left'
-          }`}
+          className={`relative group/card mb-8 transition-all duration-300 ${direction === 'forward' ? 'animate-slide-in-right' : 'animate-slide-in-left'}`}
         >
           {/* Glow effect */}
           <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl blur-xl group-hover/card:blur-2xl transition-all" />

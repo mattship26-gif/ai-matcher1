@@ -363,7 +363,7 @@ export const aiSolutions: AISolution[] = [
     ],
     cons: [
       'Can be overly prescriptive',
-      'Doesn't understand all context',
+      "Doesn't understand all context",
       'Subscription per user adds up'
     ],
     affiliateLink: '#',

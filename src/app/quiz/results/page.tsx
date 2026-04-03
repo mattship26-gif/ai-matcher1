@@ -84,16 +84,77 @@ function ResultsContent() {
       }
     }
 
-    // Role-based scoring
+    // Role-based scoring (including "other" roles)
     const roleWeights: Record<string, Record<string, number>> = {
       accounting: { excel_copilot: 5, chatgpt: 4, alteryx: 4, notion: 3 },
       financial_analysis: { excel_copilot: 5, tableau: 4, chatgpt: 4, claude: 4 },
       tax: { claude: 5, chatgpt: 4, perplexity: 4, notion: 3 },
+      risk: { claude: 5, chatgpt: 4, excel_copilot: 4, notion: 4 },
+      trading: { excel_copilot: 5, chatgpt: 4, perplexity: 3 },
+      general_finance: { chatgpt: 4, claude: 4, excel_copilot: 4, notion: 3 },
+      other_financial: { chatgpt: 4, claude: 4, excel_copilot: 3, notion: 3 },
+      
       software_dev: { copilot: 5, cursor: 5, tabnine: 4, claude: 4 },
-      data_science: { copilot: 4, chatgpt: 4, claude: 4, notion: 3 },
+      data_science: { copilot: 4, chatgpt: 4, claude: 4, notion: 3, tableau: 4 },
+      product: { notion: 5, chatgpt: 4, claude: 4, canva: 3 },
+      it_admin: { chatgpt: 4, notion: 4, copilot: 3 },
+      tech_writing: { chatgpt: 5, claude: 5, grammarly: 4, notion: 4 },
+      qa: { copilot: 4, chatgpt: 4, notion: 3 },
+      other_tech: { chatgpt: 4, copilot: 3, notion: 3 },
+      
       attorney: { claude: 5, perplexity: 5, grammarly: 4 },
+      paralegal: { chatgpt: 4, claude: 4, grammarly: 4, notion: 3 },
+      compliance: { claude: 5, chatgpt: 4, perplexity: 4, notion: 4 },
+      contracts: { claude: 5, chatgpt: 4, grammarly: 4 },
+      legal_research: { perplexity: 5, claude: 5, chatgpt: 4 },
+      other_legal: { chatgpt: 4, claude: 4, grammarly: 3 },
+      
       content: { jasper: 5, copy_ai: 5, chatgpt: 5, grammarly: 4 },
+      social: { chatgpt: 5, copy_ai: 4, canva: 4, jasper: 4 },
       design: { midjourney: 5, canva: 5, chatgpt: 3 },
+      seo: { chatgpt: 4, jasper: 4, perplexity: 4 },
+      brand: { chatgpt: 4, claude: 4, canva: 4, jasper: 3 },
+      email: { jasper: 5, copy_ai: 5, grammarly: 4 },
+      other_marketing: { chatgpt: 4, jasper: 3, canva: 3 },
+      
+      project_mgmt: { notion: 5, chatgpt: 4, claude: 3 },
+      supply_chain: { excel_copilot: 4, alteryx: 4, chatgpt: 3, notion: 4 },
+      process: { notion: 5, chatgpt: 4, claude: 4 },
+      logistics: { excel_copilot: 4, notion: 4, chatgpt: 3 },
+      procurement: { excel_copilot: 4, notion: 4, chatgpt: 3 },
+      other_operations: { chatgpt: 4, notion: 4, excel_copilot: 3 },
+      
+      account_exec: { chatgpt: 5, grammarly: 4, notion: 4 },
+      bdr: { chatgpt: 5, copy_ai: 4, grammarly: 4 },
+      account_mgmt: { chatgpt: 4, grammarly: 4, notion: 4 },
+      sales_ops: { excel_copilot: 4, notion: 5, chatgpt: 4 },
+      sales_eng: { chatgpt: 4, copilot: 4, notion: 3 },
+      other_sales: { chatgpt: 4, grammarly: 3, notion: 3 },
+      
+      recruiting: { chatgpt: 4, notion: 5, grammarly: 3 },
+      hr_ops: { notion: 5, chatgpt: 4, excel_copilot: 3 },
+      learning: { chatgpt: 5, claude: 4, notion: 5, canva: 4 },
+      comp_benefits: { excel_copilot: 5, chatgpt: 4, notion: 4 },
+      hr_business: { chatgpt: 4, claude: 4, notion: 4 },
+      other_hr: { chatgpt: 4, notion: 4 },
+      
+      clinical: { claude: 5, perplexity: 5, chatgpt: 4 },
+      admin: { notion: 5, chatgpt: 4, excel_copilot: 3 },
+      research: { perplexity: 5, claude: 5, chatgpt: 4 },
+      health_it: { chatgpt: 4, copilot: 4, notion: 4 },
+      pharma: { claude: 5, perplexity: 5, chatgpt: 4 },
+      other_healthcare: { chatgpt: 4, claude: 4, notion: 3 },
+      
+      teacher: { chatgpt: 5, claude: 4, notion: 5, canva: 4 },
+      curriculum: { chatgpt: 5, claude: 4, notion: 5 },
+      ed_admin: { notion: 5, chatgpt: 4, excel_copilot: 3 },
+      instructional: { chatgpt: 5, canva: 4, notion: 5 },
+      ed_tech: { chatgpt: 4, copilot: 4, notion: 4, canva: 3 },
+      other_education: { chatgpt: 4, notion: 4, canva: 3 },
+      
+      consulting: { chatgpt: 5, claude: 5, notion: 4, grammarly: 4 },
+      customer_service: { chatgpt: 5, grammarly: 4, notion: 3 },
+      other_role: { chatgpt: 4, claude: 4, notion: 3 }
     }
 
     // Task-based scoring
@@ -302,7 +363,7 @@ function ResultsContent() {
     if (industry === 'financial' && ['chatgpt', 'claude', 'excel_copilot'].includes(toolName)) {
       reasons.push('Perfect for financial analysis and reporting')
     }
-    if (role === 'software_dev' && ['copilot', 'cursor'].includes(toolName)) {
+    if (role.includes('software_dev') || role.includes('tech') && ['copilot', 'cursor'].includes(toolName)) {
       reasons.push('Built specifically for developers like you')
     }
     if (searchParams.get('primary_task') === 'writing' && ['chatgpt', 'claude', 'jasper', 'grammarly'].includes(toolName)) {
@@ -313,6 +374,9 @@ function ResultsContent() {
     }
     if (searchParams.get('tech_comfort') === 'beginner' && ['chatgpt', 'grammarly', 'canva'].includes(toolName)) {
       reasons.push('Easy to learn and use')
+    }
+    if (role.includes('other') && ['chatgpt', 'claude', 'notion'].includes(toolName)) {
+      reasons.push('Versatile enough to adapt to your unique role')
     }
     
     return reasons.length > 0 ? reasons[0] : 'Matches your workflow and needs'

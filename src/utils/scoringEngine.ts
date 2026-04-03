@@ -241,23 +241,48 @@ function calculateBudgetScore(tool: AITool, profile: Record<string, string>) {
   
   const pricing = tool.pricing.toLowerCase()
   
+  // Extract price number from pricing string
+  const priceMatch = pricing.match(/\$(\d+)/)
+  const price = priceMatch ? parseInt(priceMatch[1]) : null
+  
   if (budget === 'free') {
     if (pricing.includes('free')) {
       score.score += WEIGHTS.BUDGET_MATCH * 3
       score.reasons.push('Fits your free-tools budget')
     }
-  } else if (budget === 'low') {
-    if (pricing.includes('free') || pricing.match(/\$\d+\/mo/) && parseInt(pricing.match(/\$(\d+)/)?.[1] || '999') <= 20) {
-      score.score += WEIGHTS.BUDGET_MATCH * 2
+  } else if (budget === 'minimal') {
+    if (pricing.includes('free') || (price !== null && price <= 25)) {
+      score.score += WEIGHTS.BUDGET_MATCH * 2.5
       score.reasons.push('Affordable at your budget level')
     }
+  } else if (budget === 'low') {
+    if (pricing.includes('free') || (price !== null && price <= 50)) {
+      score.score += WEIGHTS.BUDGET_MATCH * 2.5
+      score.reasons.push('Well within your budget')
+    }
   } else if (budget === 'medium') {
-    if (pricing.match(/\$\d+\/mo/) && parseInt(pricing.match(/\$(\d+)/)?.[1] || '999') <= 50) {
+    if (price !== null && price <= 100 && !pricing.includes('enterprise')) {
       score.score += WEIGHTS.BUDGET_MATCH * 2
       score.reasons.push('Good value within your budget')
     }
+  } else if (budget === 'high') {
+    if (price !== null && price <= 500) {
+      score.score += WEIGHTS.BUDGET_MATCH * 2
+      score.reasons.push('Matches your budget tier')
+    } else if (!pricing.includes('enterprise')) {
+      score.score += WEIGHTS.BUDGET_MATCH * 1.5
+      score.reasons.push('Within range of your budget')
+    }
+  } else if (budget === 'enterprise') {
+    // Enterprise budget is flexible - everything scores reasonably
+    score.score += WEIGHTS.BUDGET_MATCH * 1.5
+    if (pricing.includes('enterprise')) {
+      score.score += WEIGHTS.BUDGET_MATCH * 0.5
+      score.reasons.push('Enterprise-grade solution')
+    }
   } else if (budget === 'flexible') {
     score.score += WEIGHTS.BUDGET_MATCH
+    score.reasons.push('Flexible budget match')
   }
   
   return score

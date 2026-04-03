@@ -1,7 +1,8 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
+import Link from 'next/link'
 
 type Tool = {
   name: string
@@ -15,6 +16,7 @@ type Tool = {
 
 function ResultsContent() {
   const searchParams = useSearchParams()
+  const [hoveredTool, setHoveredTool] = useState<string | null>(null)
 
   const calculateScores = () => {
     const industry = searchParams.get('industry') || ''
@@ -84,23 +86,14 @@ function ResultsContent() {
 
     // Role-based scoring
     const roleWeights: Record<string, Record<string, number>> = {
-      // Financial roles
       accounting: { excel_copilot: 5, chatgpt: 4, alteryx: 4, notion: 3 },
       financial_analysis: { excel_copilot: 5, tableau: 4, chatgpt: 4, claude: 4 },
       tax: { claude: 5, chatgpt: 4, perplexity: 4, notion: 3 },
-      
-      // Tech roles
       software_dev: { copilot: 5, cursor: 5, tabnine: 4, claude: 4 },
       data_science: { copilot: 4, chatgpt: 4, claude: 4, notion: 3 },
-      
-      // Legal roles
       attorney: { claude: 5, perplexity: 5, grammarly: 4 },
-      
-      // Marketing roles
       content: { jasper: 5, copy_ai: 5, chatgpt: 5, grammarly: 4 },
       design: { midjourney: 5, canva: 5, chatgpt: 3 },
-      
-      // Add more as needed
     }
 
     // Task-based scoring
@@ -143,13 +136,13 @@ function ResultsContent() {
     // Apply all weights
     if (industryWeights[industry]) {
       Object.entries(industryWeights[industry]).forEach(([tool, weight]) => {
-        scores[tool] += weight * 3 // Industry is important
+        scores[tool] += weight * 3
       })
     }
 
     if (roleWeights[role]) {
       Object.entries(roleWeights[role]).forEach(([tool, weight]) => {
-        scores[tool] += weight * 4 // Role is very important
+        scores[tool] += weight * 4
       })
     }
 
@@ -185,9 +178,6 @@ function ResultsContent() {
     .filter(([, score]) => score > 0)
     .sort(([, a], [, b]) => b - a)
     .slice(0, 5)
-
-  const industry = searchParams.get('industry') || ''
-  const role = searchParams.get('role') || ''
 
   const toolDetails: Record<string, Omit<Tool, 'score' | 'whyForYou'>> = {
     chatgpt: {
@@ -304,9 +294,10 @@ function ResultsContent() {
     }
   }
 
-  // Generate personalized "why for you" explanations
   const generateWhyForYou = (toolName: string): string => {
     const reasons: string[] = []
+    const industry = searchParams.get('industry') || ''
+    const role = searchParams.get('role') || ''
     
     if (industry === 'financial' && ['chatgpt', 'claude', 'excel_copilot'].includes(toolName)) {
       reasons.push('Perfect for financial analysis and reporting')
@@ -336,127 +327,195 @@ function ResultsContent() {
   const maxScore = Math.max(...recommendations.map(r => r.score))
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Your Personalized AI Toolkit
+    <div className="min-h-screen bg-black terminal-grid scanlines relative">
+      {/* Ambient glows */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-green-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
+      
+      <div className="container mx-auto px-6 py-12 max-w-5xl relative z-10">
+        {/* Terminal header */}
+        <div className="mb-8 font-mono text-xs text-green-400/60">
+          <div className="mb-1">$ analysis_complete.status = SUCCESS</div>
+          <div className="mb-1">$ neural_match_score = {Math.round((recommendations[0].score / maxScore) * 100)}%</div>
+          <div className="mb-4">$ rendering_results... <span className="text-green-400">✓</span></div>
+        </div>
+
+        {/* Main header */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-black font-mono text-white mb-3 neon-glow">
+            ANALYSIS_COMPLETE
           </h1>
-          <p className="text-gray-700">
-            Based on your role and workflow, here are your top matches
+          <p className="text-gray-400 text-lg">
+            Your personalized AI toolkit // Optimized for your workflow
           </p>
         </div>
 
-        {/* Top recommendation */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg shadow-lg p-6 mb-4 text-white">
-          <div className="flex items-start justify-between mb-3">
-            <div>
-              <span className="text-blue-100 text-xs font-semibold uppercase tracking-wide">
-                🏆 Best Match
-              </span>
-              <h2 className="text-2xl font-bold mt-1">
-                {recommendations[0].name}
-              </h2>
+        {/* Top match - Hero card */}
+        <div className="relative group/hero mb-8">
+          <div className="absolute -inset-2 bg-gradient-to-r from-green-500/30 via-blue-500/30 to-purple-500/30 rounded-2xl blur-2xl group-hover/hero:blur-3xl transition-all" />
+          
+          <div className="relative bg-gradient-to-br from-zinc-950 to-black border-2 border-green-400/50 rounded-2xl p-8 overflow-hidden">
+            {/* Scanline effect */}
+            <div className="absolute inset-0 scanlines opacity-30" />
+            
+            {/* Badge */}
+            <div className="inline-block mb-4 px-4 py-1 bg-green-500/10 border border-green-400 rounded font-mono text-xs text-green-400 uppercase tracking-wider">
+              🏆 PRIMARY_RECOMMENDATION
             </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold">
-                {Math.round((recommendations[0].score / maxScore) * 100)}%
-              </div>
-              <div className="text-blue-100 text-xs">match</div>
-            </div>
-          </div>
-          <p className="text-blue-50 mb-4 text-sm italic">
-            💡 {recommendations[0].whyForYou}
-          </p>
-          <p className="text-white/90 mb-4">
-            {recommendations[0].description}
-          </p>
-          <div className="grid md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <h3 className="font-semibold mb-1 text-sm">Best for:</h3>
-              <ul className="space-y-1 text-sm">
-                {recommendations[0].bestFor.map((item, idx) => (
-                  <li key={idx} className="text-white/80">• {item}</li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-1 text-sm">Pricing:</h3>
-              <p className="text-white/80 text-sm">{recommendations[0].pricing}</p>
-            </div>
-          </div>
-          <a
-            href={recommendations[0].link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-white text-blue-600 font-semibold py-2 px-6 rounded-lg hover:bg-blue-50 transition-all"
-          >
-            Try {recommendations[0].name} →
-          </a>
-        </div>
 
-        {/* Other recommendations */}
-        <div className="space-y-3">
-          {recommendations.slice(1).map((tool, index) => (
-            <div
-              key={tool.name}
-              className="bg-white rounded-lg shadow-md p-5 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <span className="text-gray-500 text-xs font-medium">
-                    #{index + 2} Match
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h2 className="text-4xl font-black font-mono text-white mb-2 neon-glow">
+                  {recommendations[0].name}
+                </h2>
+                <div className="flex items-center space-x-3 text-sm">
+                  <span className="font-mono text-green-400">
+                    MATCH: {Math.round((recommendations[0].score / maxScore) * 100)}%
                   </span>
-                  <h3 className="text-xl font-bold text-gray-900">
-                    {tool.name}
-                  </h3>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-gray-700">
-                    {Math.round((tool.score / maxScore) * 100)}%
-                  </div>
+                  <span className="text-gray-600">•</span>
+                  <span className="text-gray-400">{recommendations[0].pricing}</span>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm italic mb-2">
-                💡 {tool.whyForYou}
-              </p>
-              <p className="text-gray-700 mb-3 text-sm">
-                {tool.description}
-              </p>
-              <div className="grid md:grid-cols-2 gap-3 mb-3">
-                <div>
-                  <h4 className="text-gray-900 text-xs font-semibold mb-1">Best for:</h4>
-                  <ul className="space-y-0.5 text-xs">
-                    {tool.bestFor.slice(0, 3).map((item, idx) => (
-                      <li key={idx} className="text-gray-600">• {item}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="text-gray-900 text-xs font-semibold mb-1">Pricing:</h4>
-                  <p className="text-gray-600 text-xs">{tool.pricing}</p>
-                </div>
-              </div>
-              <a
-                href={tool.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
-              >
-                Learn more →
-              </a>
             </div>
-          ))}
+
+            <div className="bg-blue-500/5 border border-blue-400/30 rounded-lg p-4 mb-6">
+              <div className="font-mono text-xs text-blue-400 mb-2">WHY_THIS_TOOL:</div>
+              <p className="text-white font-medium">{recommendations[0].whyForYou}</p>
+            </div>
+
+            <p className="text-gray-300 mb-6 leading-relaxed">
+              {recommendations[0].description}
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div>
+                <h3 className="font-mono text-xs text-green-400 mb-3 uppercase tracking-wider">
+                  BEST_FOR:
+                </h3>
+                <div className="space-y-2">
+                  {recommendations[0].bestFor.map((item, idx) => (
+                    <div key={idx} className="flex items-center text-gray-300 text-sm">
+                      <span className="text-green-400 mr-2">›</span>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="font-mono text-xs text-green-400 mb-3 uppercase tracking-wider">
+                  PRICING_MODEL:
+                </h3>
+                <p className="text-gray-300 text-sm">{recommendations[0].pricing}</p>
+              </div>
+            </div>
+
+            <a
+              href={recommendations[0].link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/btn relative inline-block overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-blue-500 opacity-75 group-hover/btn:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-blue-500 blur-xl opacity-50 group-hover/btn:opacity-75 transition-opacity" />
+              <div className="relative bg-black border-2 border-green-400 text-green-400 font-mono font-bold py-3 px-8 uppercase tracking-wider hover:bg-green-400/10 transition-all m-[2px]">
+                [ DEPLOY_TOOL ] →
+              </div>
+            </a>
+          </div>
         </div>
 
-        {/* CTA */}
-        <div className="mt-8 text-center">
-          <a
+        {/* Alternative recommendations */}
+        <div className="mb-8">
+          <h2 className="font-mono text-sm text-gray-500 mb-4 uppercase tracking-wider">
+            // ALTERNATIVE_OPTIONS
+          </h2>
+          <div className="space-y-4">
+            {recommendations.slice(1).map((tool, index) => (
+              <div
+                key={tool.name}
+                onMouseEnter={() => setHoveredTool(tool.name)}
+                onMouseLeave={() => setHoveredTool(null)}
+                className="relative group/card"
+              >
+                {hoveredTool === tool.name && (
+                  <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-lg transition-all" />
+                )}
+                
+                <div className={`relative bg-zinc-950/80 border rounded-lg p-6 transition-all ${
+                  hoveredTool === tool.name
+                    ? 'border-green-400/50'
+                    : 'border-green-500/20'
+                }`}>
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <span className="font-mono text-xs text-gray-600">
+                          #{index + 2}
+                        </span>
+                        <h3 className="text-2xl font-bold font-mono text-white">
+                          {tool.name}
+                        </h3>
+                      </div>
+                      <div className="flex items-center space-x-3 text-sm mb-3">
+                        <span className="font-mono text-green-400/70">
+                          MATCH: {Math.round((tool.score / maxScore) * 100)}%
+                        </span>
+                        <span className="text-gray-600">•</span>
+                        <span className="text-gray-500">{tool.pricing}</span>
+                      </div>
+                      <div className="text-blue-400 text-sm italic mb-3">
+                        💡 {tool.whyForYou}
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-gray-400 text-sm mb-4">
+                    {tool.description}
+                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <h4 className="font-mono text-xs text-gray-600 mb-2 uppercase">Best for:</h4>
+                      <div className="space-y-1">
+                        {tool.bestFor.slice(0, 3).map((item, idx) => (
+                          <div key={idx} className="text-gray-500 text-xs flex items-center">
+                            <span className="text-green-400/50 mr-1">›</span>
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <a
+                    href={tool.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center font-mono text-sm text-green-400 hover:text-green-300 transition-colors"
+                  >
+                    LEARN_MORE →
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="text-center mt-12 pt-8 border-t border-green-500/20">
+          <Link
             href="/"
-            className="inline-block text-gray-600 hover:text-gray-900 transition-colors text-sm"
+            className="inline-flex items-center font-mono text-sm text-gray-600 hover:text-green-400 transition-colors"
           >
-            ← Take the quiz again
-          </a>
+            ← RUN_ANALYSIS_AGAIN
+          </Link>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center mt-8 font-mono text-xs text-gray-700">
+          <span className="text-green-400/40">// </span>
+          Results generated using neural matching algorithm v3.0.1
+          <span className="text-green-400/40 cursor-blink ml-1"></span>
         </div>
       </div>
     </div>
@@ -466,8 +525,15 @@ function ResultsContent() {
 export default function Results() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-gray-900 text-lg">Loading your results...</div>
+      <div className="min-h-screen bg-black terminal-grid scanlines flex items-center justify-center">
+        <div className="text-center">
+          <div className="font-mono text-green-400 text-lg mb-2 cursor-blink">
+            LOADING_RESULTS...
+          </div>
+          <div className="font-mono text-xs text-gray-600">
+            $ processing neural network data
+          </div>
+        </div>
       </div>
     }>
       <ResultsContent />

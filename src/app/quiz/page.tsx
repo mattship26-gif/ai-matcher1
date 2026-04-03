@@ -3,107 +3,46 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const questions = [
-  {
-    id: 1,
-    question: "What's your primary use case?",
-    options: [
-      "Customer service automation",
-      "Content generation",
-      "Data analysis",
-      "Software development",
-      "Research and insights"
-    ]
-  },
-  {
-    id: 2,
-    question: "What's your team size?",
-    options: [
-      "Just me (1)",
-      "Small team (2-10)",
-      "Medium team (11-50)",
-      "Large team (51-200)",
-      "Enterprise (200+)"
-    ]
-  },
-  {
-    id: 3,
-    question: "What's your technical expertise?",
-    options: [
-      "Non-technical (need simple interface)",
-      "Some technical knowledge",
-      "Developer-friendly (API access needed)",
-      "Data scientist/ML engineer"
-    ]
-  },
-  {
-    id: 4,
-    question: "What's your budget range?",
-    options: [
-      "Free/Very low cost",
-      "Up to $100/month",
-      "Up to $500/month",
-      "$500-$2000/month",
-      "Enterprise pricing (flexible)"
-    ]
-  }
-];
-
 export default function QuizPage() {
   const router = useRouter();
+  const [answers, setAnswers] = useState<Record<number, string>>({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<string[]>([]);
 
-  const handleAnswer = (answer: string) => {
-    const newAnswers = [...answers, answer];
-    setAnswers(newAnswers);
-
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      // Quiz complete - navigate to results
-      router.push(`/results?answers=${encodeURIComponent(JSON.stringify(newAnswers))}`);
-    }
-  };
-
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
-
-  return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
-        {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-            <div 
-              className="h-full bg-purple-500 transition-all duration-500"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <p className="text-gray-400 text-sm mt-2">
-            Question {currentQuestion + 1} of {questions.length}
-          </p>
-        </div>
-
-        {/* Question */}
-        <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-3xl font-bold text-white mb-8">
-            {questions[currentQuestion].question}
-          </h2>
-
-          {/* Options */}
-          <div className="space-y-4">
-            {questions[currentQuestion].options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswer(option)}
-                className="w-full text-left p-4 bg-gray-700/50 hover:bg-purple-600/30 text-white rounded-lg transition-all transform hover:scale-102 border border-gray-600 hover:border-purple-500"
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </main>
-  );
-}
+  const questions = [
+    {
+      id: 1,
+      question: "What's your primary work focus?",
+      options: [
+        { value: 'writing', label: '📝 Writing & Content Creation', weight: { chatgpt: 2, claude: 2, jasper: 3 } },
+        { value: 'code', label: '💻 Software Development', weight: { copilot: 3, chatgpt: 2, tabnine: 2 } },
+        { value: 'visual', label: '🎨 Design & Visual Content', weight: { midjourney: 3, dalle: 2, canva: 2 } },
+        { value: 'data', label: '📊 Data Analysis & Research', weight: { claude: 3, chatgpt: 2, perplexity: 2 } },
+        { value: 'business', label: '💼 Business Strategy & Operations', weight: { chatgpt: 2, claude: 2, notion: 2 } },
+        { value: 'customer', label: '🤝 Customer Service & Support', weight: { chatgpt: 2, claude: 1, zendesk: 2 } }
+      ]
+    },
+    {
+      id: 2,
+      question: "What type of output do you need most?",
+      options: [
+        { value: 'text', label: '📄 Written documents & reports', weight: { chatgpt: 2, claude: 3, jasper: 2 } },
+        { value: 'code', label: '⚙️ Code & technical solutions', weight: { copilot: 3, chatgpt: 2, tabnine: 2 } },
+        { value: 'images', label: '🖼️ Images & graphics', weight: { midjourney: 3, dalle: 3, canva: 2 } },
+        { value: 'insights', label: '💡 Analysis & insights', weight: { claude: 3, perplexity: 2, chatgpt: 2 } },
+        { value: 'ideas', label: '💭 Brainstorming & ideas', weight: { chatgpt: 3, claude: 2, notion: 1 } },
+        { value: 'answers', label: '❓ Quick answers & facts', weight: { perplexity: 3, chatgpt: 2, claude: 1 } }
+      ]
+    },
+    {
+      id: 3,
+      question: "How much detail do you typically need?",
+      options: [
+        { value: 'brief', label: '⚡ Quick & concise', weight: { chatgpt: 2, perplexity: 3, copilot: 2 } },
+        { value: 'moderate', label: '📋 Balanced overview', weight: { chatgpt: 3, claude: 2, jasper: 2 } },
+        { value: 'detailed', label: '📚 Deep & comprehensive', weight: { claude: 3, chatgpt: 2, notion: 2 } },
+        { value: 'technical', label: '🔬 Highly technical', weight: { copilot: 3, claude: 2, tabnine: 2 } }
+      ]
+    },
+    {
+      id: 4,
+      question: "What's your

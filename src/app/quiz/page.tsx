@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 type Answer = {
   value: string
   label: string
-  weight?: Record<string, number>
 }
 
 type Question = {
@@ -21,14 +20,15 @@ export default function Quiz() {
   const router = useRouter()
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   const allQuestions: Question[] = [
     {
       id: 'industry',
-      question: 'What\'s your line of work?',
+      question: 'SELECT YOUR INDUSTRY',
       answers: [
-        { value: 'financial', label: '💼 Financial Services (Accounting, Audit, Tax, Finance)' },
-        { value: 'technology', label: '💻 Technology (Engineering, IT, Data)' },
+        { value: 'financial', label: '💼 Financial Services' },
+        { value: 'technology', label: '💻 Technology' },
         { value: 'legal', label: '⚖️ Legal & Compliance' },
         { value: 'marketing', label: '📱 Marketing & Creative' },
         { value: 'operations', label: '⚙️ Operations & Supply Chain' },
@@ -42,7 +42,7 @@ export default function Quiz() {
     // Financial Services roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'financial',
       answers: [
@@ -57,7 +57,7 @@ export default function Quiz() {
     // Technology roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'technology',
       answers: [
@@ -72,7 +72,7 @@ export default function Quiz() {
     // Legal roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'legal',
       answers: [
@@ -86,7 +86,7 @@ export default function Quiz() {
     // Marketing roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'marketing',
       answers: [
@@ -101,7 +101,7 @@ export default function Quiz() {
     // Operations roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'operations',
       answers: [
@@ -115,7 +115,7 @@ export default function Quiz() {
     // Sales roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'sales',
       answers: [
@@ -129,7 +129,7 @@ export default function Quiz() {
     // HR roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'hr',
       answers: [
@@ -143,7 +143,7 @@ export default function Quiz() {
     // Healthcare roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'healthcare',
       answers: [
@@ -157,7 +157,7 @@ export default function Quiz() {
     // Education roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'education',
       answers: [
@@ -171,7 +171,7 @@ export default function Quiz() {
     // Other roles
     {
       id: 'role',
-      question: 'What\'s your specific role?',
+      question: 'SELECT YOUR ROLE',
       conditional: true,
       showIf: (ans) => ans.industry === 'other',
       answers: [
@@ -182,23 +182,23 @@ export default function Quiz() {
         { value: 'other_role', label: 'Other' }
       ]
     },
-    // Task-based questions (apply to all)
+    // Task-based questions
     {
       id: 'primary_task',
-      question: 'What takes up most of your time?',
+      question: 'PRIMARY TIME CONSUMER',
       answers: [
-        { value: 'writing', label: '✍️ Writing reports, emails, or documents' },
+        { value: 'writing', label: '✍️ Writing reports, emails, documents' },
         { value: 'data_analysis', label: '📊 Analyzing data or numbers' },
         { value: 'coding', label: '💻 Writing or reviewing code' },
         { value: 'research', label: '🔍 Research and information gathering' },
-        { value: 'creative', label: '🎨 Creative work (design, content, etc.)' },
+        { value: 'creative', label: '🎨 Creative work (design, content)' },
         { value: 'communication', label: '💬 Client/team communication' },
         { value: 'admin', label: '📋 Administrative tasks' }
       ]
     },
     {
       id: 'biggest_pain',
-      question: 'What\'s your biggest productivity bottleneck?',
+      question: 'BIGGEST BOTTLENECK',
       answers: [
         { value: 'repetitive', label: '🔄 Repetitive tasks that waste time' },
         { value: 'writing_quality', label: '📝 Getting writing to sound right' },
@@ -210,7 +210,7 @@ export default function Quiz() {
     },
     {
       id: 'work_style',
-      question: 'How do you prefer to work?',
+      question: 'WORK STYLE PREFERENCE',
       answers: [
         { value: 'deep', label: '🧠 Deep, focused sessions' },
         { value: 'quick', label: '⚡ Quick hits throughout the day' },
@@ -220,7 +220,7 @@ export default function Quiz() {
     },
     {
       id: 'tech_comfort',
-      question: 'How comfortable are you with new technology?',
+      question: 'TECH COMFORT LEVEL',
       answers: [
         { value: 'expert', label: '🚀 Very comfortable - I love trying new tools' },
         { value: 'comfortable', label: '👍 Comfortable - I can learn quickly' },
@@ -230,7 +230,7 @@ export default function Quiz() {
     },
     {
       id: 'budget',
-      question: 'What\'s your budget for AI tools?',
+      question: 'BUDGET ALLOCATION',
       answers: [
         { value: 'free', label: '🆓 Free tools only' },
         { value: 'low', label: '💵 Under $20/month' },
@@ -240,7 +240,6 @@ export default function Quiz() {
     }
   ]
 
-  // Filter questions based on previous answers
   const getVisibleQuestions = () => {
     return allQuestions.filter(q => {
       if (!q.conditional) return true
@@ -256,7 +255,6 @@ export default function Quiz() {
     const newAnswers = { ...answers, [currentQ.id]: value }
     setAnswers(newAnswers)
 
-    // Recalculate visible questions with new answers
     const newVisibleQuestions = allQuestions.filter(q => {
       if (!q.conditional) return true
       if (q.showIf) return q.showIf(newAnswers)
@@ -283,46 +281,99 @@ export default function Quiz() {
   const progress = ((currentQuestion + 1) / visibleQuestions.length) * 100
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8 max-w-3xl">
-        <div className="mb-6">
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span>Question {currentQuestion + 1} of {visibleQuestions.length}</span>
+    <div className="min-h-screen bg-black terminal-grid scanlines relative">
+      {/* Ambient glow */}
+      <div className="absolute top-1/4 right-0 w-96 h-96 bg-green-500/5 rounded-full blur-[120px] pointer-events-none" />
+      
+      <div className="container mx-auto px-6 py-12 max-w-3xl relative z-10">
+        {/* Terminal header */}
+        <div className="mb-6 font-mono text-xs text-green-400/60">
+          $ running analysis_protocol.exe
+        </div>
+
+        {/* Progress bar */}
+        <div className="mb-8">
+          <div className="flex justify-between text-sm font-mono text-gray-500 mb-3">
+            <span className="text-green-400">
+              QUERY [{currentQuestion + 1}/{visibleQuestions.length}]
+            </span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="h-1 bg-zinc-900 rounded-full overflow-hidden border border-green-500/20">
             <div
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2 rounded-full transition-all duration-300"
+              className="h-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 transition-all duration-500 relative"
               style={{ width: `${progress}%` }}
-            />
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 blur-sm" />
+            </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            {currentQ.question}
-          </h2>
+        {/* Question card */}
+        <div className="relative group/card mb-8">
+          <div className="absolute -inset-1 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-lg blur-lg group-hover/card:blur-xl transition-all" />
+          
+          <div className="relative bg-black border border-green-500/30 rounded-lg p-8">
+            <div className="font-mono text-xs text-green-400/60 mb-4">
+              {'>'} PROCESSING_INPUT
+            </div>
+            <h2 className="text-3xl font-black font-mono text-white mb-8 neon-glow">
+              {currentQ.question}
+            </h2>
 
-          <div className="space-y-2">
-            {currentQ.answers.map((answer) => (
+            <div className="space-y-3">
+              {currentQ.answers.map((answer, index) => (
+                <button
+                  key={answer.value}
+                  onClick={() => handleAnswer(answer.value)}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  className="w-full group/btn relative overflow-hidden"
+                >
+                  {/* Glow effect on hover */}
+                  {hoveredIndex === index && (
+                    <div className="absolute -inset-1 bg-gradient-to-r from-green-500/30 to-blue-500/30 blur-md transition-all" />
+                  )}
+                  
+                  <div className={`relative flex items-center p-4 rounded border transition-all ${
+                    hoveredIndex === index
+                      ? 'border-green-400 bg-green-500/5'
+                      : 'border-green-500/20 bg-zinc-950/50'
+                  }`}>
+                    <span className={`mr-3 font-mono text-sm transition-all ${
+                      hoveredIndex === index ? 'text-green-400' : 'text-gray-600'
+                    }`}>
+                      [{String.fromCharCode(65 + index)}]
+                    </span>
+                    <span className={`flex-1 text-left transition-all ${
+                      hoveredIndex === index ? 'text-white' : 'text-gray-400'
+                    }`}>
+                      {answer.label}
+                    </span>
+                    <span className={`font-mono text-xs transition-all ${
+                      hoveredIndex === index ? 'text-green-400 opacity-100' : 'opacity-0'
+                    }`}>
+                      →
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {currentQuestion > 0 && (
               <button
-                key={answer.value}
-                onClick={() => handleAnswer(answer.value)}
-                className="w-full text-left p-3 rounded-lg border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all text-gray-900"
+                onClick={handleBack}
+                className="mt-6 font-mono text-sm text-gray-600 hover:text-green-400 transition-colors"
               >
-                {answer.label}
+                {'<'} BACK
               </button>
-            ))}
+            )}
           </div>
+        </div>
 
-          {currentQuestion > 0 && (
-            <button
-              onClick={handleBack}
-              className="mt-4 text-gray-600 hover:text-gray-900 transition-colors text-sm"
-            >
-              ← Back
-            </button>
-          )}
+        {/* Hint text */}
+        <div className="text-center font-mono text-xs text-gray-700">
+          Press [A-{String.fromCharCode(65 + currentQ.answers.length - 1)}] or click to select
         </div>
       </div>
     </div>

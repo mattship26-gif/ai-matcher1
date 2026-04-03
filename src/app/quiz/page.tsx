@@ -51,7 +51,8 @@ export default function Quiz() {
         { value: 'tax', label: 'Tax' },
         { value: 'risk', label: 'Risk & Compliance' },
         { value: 'trading', label: 'Trading/Investment Banking' },
-        { value: 'general_finance', label: 'General Finance' }
+        { value: 'general_finance', label: 'General Finance' },
+        { value: 'other_financial', label: 'Other Financial Role' }
       ]
     },
     // Technology roles
@@ -66,7 +67,8 @@ export default function Quiz() {
         { value: 'product', label: 'Product Management' },
         { value: 'it_admin', label: 'IT/Systems Admin' },
         { value: 'tech_writing', label: 'Technical Writing' },
-        { value: 'qa', label: 'QA/Testing' }
+        { value: 'qa', label: 'QA/Testing' },
+        { value: 'other_tech', label: 'Other Tech Role' }
       ]
     },
     // Legal roles
@@ -80,7 +82,8 @@ export default function Quiz() {
         { value: 'paralegal', label: 'Paralegal' },
         { value: 'compliance', label: 'Compliance Officer' },
         { value: 'contracts', label: 'Contract Management' },
-        { value: 'legal_research', label: 'Legal Research' }
+        { value: 'legal_research', label: 'Legal Research' },
+        { value: 'other_legal', label: 'Other Legal Role' }
       ]
     },
     // Marketing roles
@@ -95,7 +98,8 @@ export default function Quiz() {
         { value: 'design', label: 'Design/Creative' },
         { value: 'seo', label: 'SEO/SEM' },
         { value: 'brand', label: 'Brand/Strategy' },
-        { value: 'email', label: 'Email Marketing' }
+        { value: 'email', label: 'Email Marketing' },
+        { value: 'other_marketing', label: 'Other Marketing Role' }
       ]
     },
     // Operations roles
@@ -109,7 +113,8 @@ export default function Quiz() {
         { value: 'supply_chain', label: 'Supply Chain' },
         { value: 'process', label: 'Process Improvement' },
         { value: 'logistics', label: 'Logistics' },
-        { value: 'procurement', label: 'Procurement' }
+        { value: 'procurement', label: 'Procurement' },
+        { value: 'other_operations', label: 'Other Operations Role' }
       ]
     },
     // Sales roles
@@ -123,7 +128,8 @@ export default function Quiz() {
         { value: 'bdr', label: 'BDR/SDR' },
         { value: 'account_mgmt', label: 'Account Management' },
         { value: 'sales_ops', label: 'Sales Operations' },
-        { value: 'sales_eng', label: 'Sales Engineering' }
+        { value: 'sales_eng', label: 'Sales Engineering' },
+        { value: 'other_sales', label: 'Other Sales Role' }
       ]
     },
     // HR roles
@@ -137,7 +143,8 @@ export default function Quiz() {
         { value: 'hr_ops', label: 'HR Operations' },
         { value: 'learning', label: 'Learning & Development' },
         { value: 'comp_benefits', label: 'Compensation & Benefits' },
-        { value: 'hr_business', label: 'HR Business Partner' }
+        { value: 'hr_business', label: 'HR Business Partner' },
+        { value: 'other_hr', label: 'Other HR Role' }
       ]
     },
     // Healthcare roles
@@ -151,7 +158,8 @@ export default function Quiz() {
         { value: 'admin', label: 'Healthcare Administration' },
         { value: 'research', label: 'Medical Research' },
         { value: 'health_it', label: 'Health IT' },
-        { value: 'pharma', label: 'Pharmaceutical' }
+        { value: 'pharma', label: 'Pharmaceutical' },
+        { value: 'other_healthcare', label: 'Other Healthcare Role' }
       ]
     },
     // Education roles
@@ -165,7 +173,8 @@ export default function Quiz() {
         { value: 'curriculum', label: 'Curriculum Development' },
         { value: 'ed_admin', label: 'Educational Administration' },
         { value: 'instructional', label: 'Instructional Design' },
-        { value: 'ed_tech', label: 'Educational Technology' }
+        { value: 'ed_tech', label: 'Educational Technology' },
+        { value: 'other_education', label: 'Other Education Role' }
       ]
     },
     // Other roles

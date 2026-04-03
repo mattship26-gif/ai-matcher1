@@ -46,3 +46,18 @@ export default function QuizPage() {
     {
       id: 4,
       question: "What's your experience level with AI?",
+      options: [
+        { value: 'beginner', label: '🌱 Just starting out', weight: { chatgpt: 3, canva: 2, notion: 2 } },
+        { value: 'intermediate', label: '📈 Some experience', weight: { chatgpt: 2, claude: 2, copilot: 2 } },
+        { value: 'advanced', label: '🚀 Very comfortable', weight: { claude: 2, copilot: 2, midjourney: 3 } },
+        { value: 'expert', label: '⚡ Power user', weight: { claude: 3, copilot: 3, midjourney: 2 } }
+      ]
+    },
+    {
+      id: 5,
+      question: "What's most important to you?",
+      options: [
+        { value: 'speed', label: '⚡ Speed & efficiency', weight: { chatgpt: 3, copilot: 3, perplexity: 2 } },
+        { value: 'quality', label: '✨ High quality output', weight: { claude: 3, midjourney: 3, jasper: 2 } },
+        { value: 'ease', label: '😊 Ease of use', weight: { chatgpt: 3, canva: 3, notion: 2 } },
+        { value: 'accuracy', label: '🎯

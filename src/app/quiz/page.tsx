@@ -91,7 +91,7 @@ export default function QuizPage() {
       options: [
         { value: 'browser', label: '🌐 In my web browser', weight: { chatgpt: 4, claude: 4, perplexity: 4, midjourney: 3 } },
         { value: 'desktop', label: '💻 Desktop application', weight: { cursor: 4, notion: 3, canva: 2, grammarly: 3 } },
-        { value: 'ide', label: '⚙️ Inside my code editor', weight: { copilot: 4, cursor: 4, tabnine: 4, copilot: 4 } },
+        { value: 'ide', label: '⚙️ Inside my code editor', weight: { copilot: 4, cursor: 4, tabnine: 4, chatgpt: 2 } },
         { value: 'mobile', label: '📱 On my phone', weight: { chatgpt: 3, gemini: 3, grammarly: 2, canva: 3 } },
         { value: 'flexible', label: '🔄 Wherever I am', weight: { chatgpt: 4, claude: 3, notion: 3, canva: 3 } }
       ]

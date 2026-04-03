@@ -95,5 +95,5 @@ function isBudgetClose(userBudget: string, solutionTier: string): boolean {
     'flexible': budgetOrder
   };
 
-  return userTiers[userBudget]?.includes(solutionTier) || false;
+  return userTiers[userBudget as keyof typeof userTiers]?.includes(solutionTier) || false;
 }

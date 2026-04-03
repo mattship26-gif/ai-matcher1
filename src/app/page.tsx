@@ -1,19 +1,8 @@
-import type { Metadata } from 'next';
-import './globals.css';
-
-export const metadata: Metadata = {
-  title: 'AI Solution Matcher | Find Your Perfect AI Tool',
-  description: 'Discover the right AI solutions for your business in minutes. Match with tools based on your industry, needs, and budget.',
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Home() {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <div>
+      <h1>Welcome to AI Matcher!</h1>
+      <p>Your AI job matching platform</p>
+    </div>
   );
 }

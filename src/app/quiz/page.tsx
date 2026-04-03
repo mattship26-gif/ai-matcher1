@@ -334,7 +334,7 @@ export default function Quiz() {
             {/* Progress fill */}
             <div
               className="h-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 transition-all duration-500 relative"
-              style={{ width: `${progress}%` }}
+              style={{ width: progress + '%' }}
             >
               <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 blur-sm opacity-50" />
             </div>

@@ -1,5 +1,14 @@
 import { ToolCategory, CompanySize, PricingTier, ToolRating, CaseStudy, Integration } from './toolCategories';
 
+// Re-export types for other components to use
+export type { CompanySize, ToolCategory, PricingTier, ToolRating, CaseStudy, Integration };
+
+// Add quiz-specific types
+export type TeamSize = 'solo' | 'small-team' | 'department' | 'multi-department' | 'company-wide';
+export type Budget = 'free-only' | 'minimal' | 'moderate' | 'flexible' | 'unlimited';
+export type TechSavviness = 'beginner' | 'intermediate' | 'advanced' | 'expert';
+export type Priority = 'ease-of-use' | 'features' | 'integrations' | 'price' | 'support';
+
 export interface AITool {
   id: string;
   name: string;

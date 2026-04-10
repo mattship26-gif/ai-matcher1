@@ -12,7 +12,7 @@ export default function ToolDetailPage({ params }: { params: { id: string } }) {
 
   const similarTools = getSimilarTools(params.id, 3);
   const avgRating = tool.ratings.length > 0
-    ? (tool.ratings.reduce((sum, r) => sum + r.score, 0) / tool.ratings.length).toFixed(1)
+    ? (tool.ratings.reduce((sum: number, r: { score: number }) => sum + r.score, 0) / tool.ratings.length).toFixed(1)
     : null;
 
   return (

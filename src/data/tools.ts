@@ -1,4 +1,4 @@
-import { ToolCategory, CompanySize, PricingTier, ToolRating, CaseStudy, Integration } from './toolCategories';
+
 
 // Re-export types for other components to use
 export type { CompanySize, ToolCategory, PricingTier, ToolRating, CaseStudy, Integration };

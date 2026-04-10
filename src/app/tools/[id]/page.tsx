@@ -116,7 +116,7 @@ export default function ToolDetailPage({ params }: { params: { id: string } }) {
             <section>
               <h2 className="text-2xl font-bold text-slate-900 mb-4">Key Features</h2>
               <ul className="grid sm:grid-cols-2 gap-3">
-                {tool.keyFeatures.map((feature, index) => (
+                {tool.keyFeatures.map((feature: string, index: number) => (
                   <li key={index} className="flex items-start gap-2">
                     <span className="text-blue-600 mt-1">✓</span>
                     <span className="text-slate-700">{feature}</span>

@@ -7992,4 +7992,5 @@ export const tools: AITool[] = [
 // ============================================
 // EXPORT
 // ============================================
+export const toolsData = tools;
 export default toolsData;

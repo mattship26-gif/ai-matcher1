@@ -130,7 +130,7 @@ export default function ToolDetailPage({ params }: { params: { id: string } }) {
               <section>
                 <h2 className="text-2xl font-bold text-slate-900 mb-4">Integrations</h2>
                 <div className="flex flex-wrap gap-2">
-                  {tool.integrations.map((integration, index) => (
+                  {tool.integrations.map((integration: { toolName: string }, index: number) => (
                     <span key={index} className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm">
                       {integration.toolName}
                     </span>
@@ -144,7 +144,7 @@ export default function ToolDetailPage({ params }: { params: { id: string } }) {
               <section>
                 <h2 className="text-2xl font-bold text-slate-900 mb-4">Ratings & Reviews</h2>
                 <div className="space-y-3">
-                  {tool.ratings.map((rating, index) => (
+                  {tool.ratings.map((rating: { source: string; reviewCount: number; score: number }, index: number) => (
                     <div key={index} className="flex items-center justify-between bg-slate-50 p-4 rounded-lg">
                       <div className="flex items-center gap-3">
                         <span className="font-semibold text-slate-900">{rating.source}</span>
@@ -197,7 +197,7 @@ export default function ToolDetailPage({ params }: { params: { id: string } }) {
               <div>
                 <h3 className="font-semibold text-slate-900 mb-4">Similar Tools</h3>
                 <div className="space-y-3">
-                  {similarTools.map((similar) => (
+                  {similarTools.map((similar: { id: string; name: string; description: string }) => (
                     <Link key={similar.id} href={`/tools/${similar.id}`}>
                       <div className="bg-white border border-slate-200 rounded-lg p-4 hover:border-blue-300 hover:shadow-md transition">
                         <div className="font-semibold text-slate-900 mb-1">{similar.name}</div>

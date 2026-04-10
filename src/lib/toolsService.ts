@@ -1,5 +1,5 @@
 // lib/toolsService.ts
-import toolsData, { Tool, ToolCategory, PriceTier, CompanySize } from '@/data/tools';
+import toolsData, { Tool, ToolCategory, ToolRating, PriceTier, CompanySize } from '@/data/tools';
 
 // ============================================
 // BASIC QUERIES
